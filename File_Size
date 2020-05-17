@@ -1,0 +1,86 @@
+'file size VBA Program
+
+Sub reset_workbook()
+
+Worksheets("Sheet1").UsedRange.Clear
+
+Worksheets("Data").Activate
+Range(Range("A2:B2"), Range("A2:B2").End(xlDown)).Clear
+
+End Sub
+
+
+Sub increase_size()
+
+Dim file_size As Collection
+Dim char_count As Collection
+Dim dummy_string As String
+Dim n As Integer
+Dim xlsx_wb As Workbook
+
+Workbooks("xlsx.xlsx").Activate
+
+Set xlsx_wb = ActiveWorkbook
+
+
+
+Application.DisplayAlerts = False
+
+n = InputBox("Number of Iterations")
+
+'strFileToOpen = Application.GetOpenFilename _
+ '(Title:="Please choose a file to open")
+
+
+Set file_size = New Collection
+Set char_count = New Collection
+
+dummy_string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+Worksheets("Sheet1").Activate
+
+For x = 1 To n
+
+
+    If Range("A1").Value = vbNullString Then
+       'Start with 130,000 characters
+       Range(Cells(1, 1), Cells(10, 500)) = dummy_string
+       
+    Else:
+        bottom_row = Range("A1").End(xlDown).Row
+        
+        
+        Range(Cells(bottom_row + 1, 1), Cells(bottom_row + 11, 500)) = dummy_string
+    
+    End If
+    
+xlsx_wb.Save
+
+'Get the size of this file after saving down
+
+file_size.Add (FileLen("C:\Users\jhulet1\Desktop\xlsm vs xlsb\xlsx.xlsx"))
+char_count.Add (Len(dummy_string) * x * 500 * 10)
+
+  
+Next x
+
+cell_row = 1
+
+'Output file size to Data tab
+For Each j In file_size
+    Worksheets("Data").Activate
+    cell_row = cell_row + 1
+    Cells(cell_row, 1) = j
+Next j
+
+cell_row = 1
+
+For Each k In char_count
+    Worksheets("Data").Activate
+    cell_row = cell_row + 1
+    Cells(cell_row, 2) = k
+Next k
+
+Application.DisplayAlerts = True
+
+End Sub
