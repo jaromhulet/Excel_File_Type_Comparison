@@ -1,0 +1,24 @@
+#Regression for File Size and Character Number -- R
+
+
+#get CSV data for XLSM
+xlsm_data <- read.csv("C:/Users/jhulet1/Desktop/xlsm vs xlsb/xlsm.csv", header=TRUE)
+
+#run regression and summarize for xlsm
+xlsm_reg<- lm(file_size ~ num_characters, data = xlsm_data)
+summary(xlsm_reg)
+
+#get CSV data for XLSB
+xlsb_data <- read.csv("C:/Users/jhulet1/Desktop/xlsm vs xlsb/xlsb.csv", header=TRUE)
+
+#run regression and summarize for xlsb
+xlsb_reg<- lm(file_size ~ num_characters, data = xlsb_data)
+summary(xlsb_reg)
+
+
+#get CSV data for XLSB
+xlsx_data <- read.csv("C:/Users/jhulet1/Desktop/xlsm vs xlsb/File Size/xlsx.csv", header=TRUE)
+
+#run regression and summarize for xlsb
+xlsx_reg <- lm(file_size ~ num_characters, data = xlsx_data)
+summary(xlsx_reg)
