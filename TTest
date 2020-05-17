@@ -1,0 +1,53 @@
+#get performance data
+perf_data <- read.csv("C:/Users/jhulet1/Desktop/xlsm vs xlsb/Save Down Speed/ttest.csv", header=TRUE)
+
+#Simple T-Tests
+t.test(perf_data$XLSM, perf_data$XLSB) 
+
+t.test(perf_data$XLSM, perf_data$XLSX)
+
+t.test(perf_data$XLSX, perf_data$XLSB) 
+
+
+#median
+xlsb_median <- median(perf_data$XLSB)
+medians <- c(xlsb_median)
+
+xlsm_median <- median(perf_data$XLSM)
+medians <- c(medians,xlsm_median)
+
+xlsx_median <- median(perf_data$XLSX)
+medians <- c(medians,xlsx_median)
+
+
+
+#mean
+xlsb_mean <- mean(perf_data$XLSB)
+means <- c(xlsb_mean)
+
+xlsm_mean <- mean(perf_data$XLSM)
+means <- c(means,xlsm_mean)
+
+xlsx_mean <- mean(perf_data$XLSX)
+means <- c(means,xlsx_mean)
+
+
+
+
+#standard deviation
+xlsb_sd <- sd(perf_data$XLSB)
+stdev <- c(xlsb_sd)
+
+xlsm_sd <- sd(perf_data$XLSM)
+stdev <- c(stdev,xlsm_sd)
+
+xlsx_sd <- sd(perf_data$XLSX)
+stdev <- c(stdev,xlsx_sd)
+
+
+
+#put it all together
+File_Type <- c('XLSB','XLSM','XLSX')
+
+basic_stats <- cbind(File_Type,medians,means,stdev)
+print(basic_stats)
