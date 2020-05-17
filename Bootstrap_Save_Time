@@ -1,0 +1,91 @@
+#bootsrap save down data -- R
+
+#install packages
+install.packages('ggplot2', dependencies = TRUE)
+install.packages('colorspace')
+install.packages('reshape')
+
+
+library('colorspace')
+library('ggplot2')
+library('reshape')
+
+#get CSV of save down times
+save_time_data <- read.csv("C:/Users/jhulet1/Desktop/xlsm vs xlsb/Save Down Speed/save speeds chart.csv", header=TRUE)
+
+
+#bootstrap XLSB data
+boot_xlsb <- replicate(10000,mean(sample(save_time_data$XLSB,replace=TRUE)))
+df_xlsb <- as.data.frame(boot_xlsb)
+
+
+#bootstrap XLSB data
+boot_xlsm <- replicate(10000,mean(sample(save_time_data$XLSM,replace=TRUE)))
+df_xlsm <- as.data.frame(boot_xlsm)
+
+
+#bootstrap XLSM data
+boot_xlsx <- replicate(10000,mean(sample(save_time_data$XLSX,replace=TRUE)))
+df_xlsx <- as.data.frame(boot_xlsx)
+
+
+#put all histogram data into a datafram
+save_time <- cbind(df_xlsb,df_xlsm,df_xlsx)
+
+
+
+#verify that each excel format has the same number of non-null rows
+count_xlsb <- NROW(na.omit(save_time$boot_xlsb))
+count_xlsm <- NROW(na.omit(save_time$boot_xlsm))
+count_xlsx <- NROW(na.omit(save_time$boot_xlsx))
+
+print(count_xlsb)
+print(count_xlsm)
+print(count_xlsx)
+
+#Get means, medians and standard devations of the bootstrap output
+#median
+xlsb_median <- median(save_time$boot_xlsb)
+medians <- c(xlsb_median)
+
+xlsm_median <- median(save_time$boot_xlsm)
+medians <- c(medians,xlsm_median)
+ 
+xlsx_median <- median(save_time$boot_xlsx)
+medians <- c(medians,xlsx_median)
+
+#mean
+xlsb_mean <- mean(save_time$boot_xlsb)
+means <- c(xlsb_mean)
+
+xlsm_mean <- mean(save_time$boot_xlsm)
+means <- c(means,xlsm_mean)
+
+xlsx_mean <- mean(save_time$boot_xlsx)
+means <- c(means,xlsx_mean)
+
+#standard deviation
+xlsb_sd <- sd(save_time$boot_xlsb)
+stdev <- c(xlsb_sd)
+
+xlsm_sd <- sd(save_time$boot_xlsm)
+stdev <- c(stdev,xlsm_sd)
+
+xlsx_sd <- sd(save_time$boot_xlsx)
+stdev <- c(stdev,xlsx_sd)
+
+
+#put it all together
+File_Type <- c('XLSB','XLSM','XLSX')
+
+basic_stats <- cbind(File_Type,medians,means,stdev)
+print(basic_stats)
+
+
+
+#transpose save time in order to be able to use qplot to break out the three groups
+melt_save_time <- melt(data=save_time) 
+
+
+#plot histogram based on transposed data frame
+qplot(value, fill=variable,facets=~variable, data=melt_save_time, geom='histogram')
