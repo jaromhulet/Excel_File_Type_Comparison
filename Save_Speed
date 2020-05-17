@@ -1,0 +1,55 @@
+'Save Down Speed Code VBA
+Sub make_file_large()
+
+dummy_string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+Range(Cells(1, 1), Cells(50000, 100)) = dummy_string
+
+
+End Sub
+
+
+Sub increase_size()
+
+Dim save_time As Collection
+Dim char_count As Collection
+Dim dummy_string As String
+Dim start_time As Double
+Dim execution_time As Double
+
+
+Set save_time = New Collection
+
+'activate test workbook
+Workbooks("save speed xlsm.xlsm").Activate
+
+For x = 1 To 4
+
+    'start timer
+    start_time = Timer
+       
+    ThisWorkbook.Save
+    
+    
+    'Get the size of this file in bytes after saving down
+    execution_time = Round(Timer - start_time, 2)
+
+    'put execution time into save_time collection
+    save_time.Add (execution_time)
+    
+Next x
+
+'Put data into save speeds chart.xslx workbook
+Workbooks("Save Speeds Chart.xlsx").Activate
+
+cell_row = 1
+
+'Output file size to Data tab
+For Each j In save_time
+    cell_row = cell_row + 1
+    Cells(cell_row, 7) = j
+Next j
+
+
+
+End Sub
